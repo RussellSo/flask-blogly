@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+
+{% block main %}
+<h1>USER DETAIL PAGE</h1>
+
+<h2>{{new_user.first_name}} {{new_user.last_name}}</h2>
+<a href="/users/{{new_user.id}}/edit">Edit</a>
+
+<form action="/users/{{new_user.id}}/delete" method="POST">
+    <button>DELETE</button>
+</form>
+
+<p><a href="/users">HOME</a></p>
+
+{% endblock %}

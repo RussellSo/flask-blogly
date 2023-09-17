@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<h1>WELCOME TO USER EDIT PAGE</h1>
+<h2>User: {{curr_user.first_name}} {{curr_user.last_name}}</h2>
+
+<form action="/users/new" method="POST">
+    <label for="fname">Edit First Name</label>
+    <input id="fname" type="text" placeholder="edit first name" name="first_name" />
+    <br>
+    <label for="lname">Edit Last Name</label>
+    <input id="lname" type="text" placeholder="edit last name" name="last_name" />
+    <br>
+    <button>submit</button>
+</form>
+<a href="/users/{{curr_user.id}}">CANCEL</a>
+
+{% endblock %}
