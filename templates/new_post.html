@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<h1>New Post Form</h1>
+
+<h2>Add Post for {{curr_user.first_name}} {{curr_user.last_name}}</h2>
+
+<form action="#" method="POST">
+    <label for="title">Add Title</label>
+    <input id="title" type="text" placeholder="Add Title" name="title">
+    <br>
+    <label for="comment">Add Comment</label>
+    <textarea name="comment" id="comment" cols="30" rows="3"></textarea>
+    <br>
+    <button>Submit</button>
+    <a href="/users/{{curr_user.id}}">Cancel</a>
+</form>
+
+{% endblock %}

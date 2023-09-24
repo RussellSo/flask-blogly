@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+
+<h1>POST DETAIL</h1>
+<h1>{{curr_post.title}}</h1>
+
+<p>{{curr_post.content}}</p>
+
+<p>submitted by {{curr_post.user.first_name}}</p>
+<p>date {{curr_post.created_at}}</p>
+
+
+<button><a href="/users/{{curr_post.user.id}}">Cancel</a></button>
+<button><a href="/posts/{{curr_post.id}}/edit">Edit</a></button>
+
+<form action="/posts/{{curr_post.id}}/delete" method="POST">
+    <button>Delete</button>
+</form>
+
+
+
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<h1>EDIT POST</h1>
+
+<form action="#" method="POST">
+    <label for="title">Edit Title</label>
+    <input id="title" type="text" placeholder="Edit Title" name="title">
+    <br>
+    <label for="comment">Edit Comment</label>
+    <textarea name="comment" id="comment" cols="30" rows="3"></textarea>
+    <br>
+    <button>Submit</button>
+    <a href="/users/{{curr_post.id}}">Cancel</a>
+</form>
+{% endblock %}
