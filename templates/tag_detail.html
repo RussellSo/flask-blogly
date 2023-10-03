@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block main %}
+
+<h1>{{tag.name}}</h1>
+
+<h2>Posts that include: {{tag.name}}</h2>
+
+<button><a href="/tags/{{tag.id}}/edit">Edit</a></button>
+<!-- note: action has to be set to delete route - originally used an anchor tag going into the delete route -->
+<form action="/tags/{{tag.id}}/delete" method="POST">
+    <button>Delete</button>
+</form>
+<a href="/tags">Cancel</a>
+
+{% endblock %}

@@ -11,6 +11,12 @@
 <p>submitted by {{curr_post.user.first_name}}</p>
 <p>date {{curr_post.created_at}}</p>
 
+<div>
+    <h3>Tags</h3>
+    {% for tag in tags %}
+    <p>{{tag.name}}</p>
+    {% endfor %}
+</div>
 
 <button><a href="/users/{{curr_post.user.id}}">Cancel</a></button>
 <button><a href="/posts/{{curr_post.id}}/edit">Edit</a></button>

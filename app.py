@@ -1,7 +1,7 @@
 """Blogly application."""
 from flask_sqlalchemy import SQLAlchemy
 from flask import Flask, render_template, request, redirect
-from models import db, connect_db, User, Post
+from models import db, connect_db, User, Post, Tag, PostTag
 
 # export PATH=/Applications/Postgres.app/Contents/Versions/latest/bin:$PATH
 app = Flask(__name__)
@@ -72,22 +72,34 @@ def user_delete(id):
 @app.route('/users/<int:id>/posts/new', methods = ["GET", "POST"])
 def new_post(id):
     curr_user = User.query.get(id)
+    tags = Tag.query.all()
 
 
     if (request.method == 'POST'):
         title = request.form["title"]
         comment = request.form["comment"]
+        tags = Tag.query.all()
+        # tag_checks = request.form.getlist('tags')
+        tag_ids = [int(num) for num in request.form.getlist('tags')]
+        tags = Tag.query.filter_by(id = tag_ids).all()
         user_post = Post(title=title, content=comment, user_id= curr_user.id)
         db.session.add(user_post)
-        db.session.commit()
+        for tag in tags:
+            # new_post = [tag.posttags.append(user_post) for tag in tag_checks]
+            print(tag)
+            new_posttag = tag.posttags.append(user_post)
+            db.session.add(new_posttag)
+            db.session.commit()
+       
         return redirect(f"/users/{id}")
     else:
-        return render_template('new_post.html', curr_user=curr_user)
+        return render_template('new_post.html', curr_user=curr_user, tags=tags)
 
 @app.route('/posts/<int:post_id>')
 def post_detail(post_id):
     curr_post = Post.query.get(post_id)
-    return render_template('post_detail.html', curr_post=curr_post)
+    tags = curr_post.tag
+    return render_template('post_detail.html', curr_post=curr_post, tags=tags)
 
 # should i have add this to the initial route?
 # remember the form should have this route as the action
@@ -131,3 +143,46 @@ def post_edit(post_id):
 # When a user is deleted, the related posts should be deleted, too.
 # You can find help for this at [Cascades](https://docs.sqlalchemy.org/en/latest/orm/cascades.html)>`_
 ##
+
+@app.route('/tags')
+def tag_list():
+    tags = Tag.query.all()
+    return render_template('tag_list.html', tags=tags)
+
+@app.route('/tags/new', methods=['GET', 'POST'])
+def add_tag():
+    
+    if (request.method == 'POST'):
+        tag_name = request.form['tag_name']
+        new_tag = Tag(name=tag_name)
+        db.session.add(new_tag)
+        db.session.commit()
+        return redirect('/tags')
+    else:
+        return render_template('add_tag.html')
+    
+@app.route('/tags/<int:tag_id>')
+def tag_detail(tag_id):
+    tag = Tag.query.get(tag_id)
+    return render_template('tag_detail.html', tag=tag)
+
+@app.route('/tags/<int:tag_id>/edit', methods=['GET', 'POST'])
+def tag_edit(tag_id):
+    tag = Tag.query.get(tag_id)
+    if (request.method == 'POST'):
+        tag.name = request.form['tag_name']
+       
+        db.session.commit()
+        return redirect(f"/tags/{tag.id}")
+    else:
+        return render_template('tag_edit.html', tag=tag)
+    
+@app.route('/tags/<int:tag_id>/delete', methods=['POST'])
+def tag_delete(tag_id):
+    tag = Tag.query.filter_by(id=tag_id).delete() ##(column = anything)
+    db.session.commit()
+    return redirect('/tags')
+
+# create a few more tags
+# have them show in jinja with tag format of .getlist
+# when creating post use .append, and also list comprehension with .getlist as well
