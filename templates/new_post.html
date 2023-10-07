@@ -13,10 +13,11 @@
     <label for="comment">Add Comment</label>
     <textarea name="comment" id="comment" cols="30" rows="3"></textarea>
     <br>
+
     <h4>Add Tags</h4>
     {% for tag in tags %}
     <label for="{{tag.name}}">{{tag.name}}</label>
-    <input type="checkbox" name="tags" id="{{tag.name}}">
+    <input type="checkbox" name="tags" value="{{tag.id}}">
     <br>
     {% endfor %}
     <button>Submit</button>

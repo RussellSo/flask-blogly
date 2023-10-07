@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.app_context().push()
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql:///blogly'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SQLALCHEMY_ECHO'] = True
+app.config['SQLALCHEMY_ECHO'] = False
 connect_db(app)
 app.config['SECRET_KEY'] = "anything"
 
@@ -75,22 +75,22 @@ def new_post(id):
     tags = Tag.query.all()
 
 
+    # TROUBLE: had to look at solution - first problem was with checkbox value not being the id specificially
+    # used list comprehension to change list values to integers
+    # then had to grab the isntances with fliter - filter takes one arguement only - i should research difference .in_ examples
+    # whenever using a select like filter. Have to use .all() to return instance
+    # then we use our relationship backref name in the instatiation. 
     if (request.method == 'POST'):
         title = request.form["title"]
         comment = request.form["comment"]
         tags = Tag.query.all()
-        # tag_checks = request.form.getlist('tags')
-        tag_ids = [int(num) for num in request.form.getlist('tags')]
-        tags = Tag.query.filter_by(id = tag_ids).all()
-        user_post = Post(title=title, content=comment, user_id= curr_user.id)
-        db.session.add(user_post)
-        for tag in tags:
-            # new_post = [tag.posttags.append(user_post) for tag in tag_checks]
-            print(tag)
-            new_posttag = tag.posttags.append(user_post)
-            db.session.add(new_posttag)
-            db.session.commit()
-       
+        tag_ids = [int(num) for num in request.form.getlist("tags")] # returns just information: ids of integers
+        # using filter(Class.column)
+        tagSelects = Tag.query.filter(Tag.id.in_(tag_ids)).all() # returns the actual instances now
+        new_post = Post(title=title, content=comment, user_id=curr_user.id, tag=tagSelects)
+        print(new_post.tag)
+        db.session.add(new_post)
+        db.session.commit()
         return redirect(f"/users/{id}")
     else:
         return render_template('new_post.html', curr_user=curr_user, tags=tags)

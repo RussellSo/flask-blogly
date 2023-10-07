@@ -14,7 +14,7 @@
 <div>
     <h3>Tags</h3>
     {% for tag in tags %}
-    <p>{{tag.name}}</p>
+    <p><a href="/tags/{{tag.id}}/edit"></a>{{tag.name}}</p>
     {% endfor %}
 </div>
 
